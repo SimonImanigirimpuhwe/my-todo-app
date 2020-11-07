@@ -3,7 +3,12 @@ import React from 'react';
 const Form = ({handleText, handleSubmit, inputValue}) => {
     return ( 
         <form>
-            <input value={inputValue} onChange={handleText} type="text" placeholder="Enter todo" />
+            <input 
+            value={inputValue} 
+            onChange={handleText} 
+            type="text" 
+            placeholder="Enter todo" 
+            />
             <button onClick={handleSubmit}><i className="fas fa-plus-square"></i></button>
             <div className="select">
                 <select>
