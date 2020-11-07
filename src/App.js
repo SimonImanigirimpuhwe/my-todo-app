@@ -31,11 +31,12 @@ function App() {
     ]);
     setInputValue('')
   }
+
   return (
     <div className="container">
       <h1>My todo's list</h1>
       <Form inputValue={inputValue} setInputValue={setInputValue} handleSubmit={handleSubmit} handleText={handleText}/>
-      <TodoList todoValue={todoValue}/>
+      <TodoList todoValue={todoValue} setTodoValue={setTodoValue}/>
     </div>
   );
 }
