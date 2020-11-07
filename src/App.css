@@ -71,3 +71,7 @@ select:hover,
 form button:hover{
   cursor: pointer;
 }
+.checked{
+  text-decoration: line-through;
+  opacity: 0.6;
+}
