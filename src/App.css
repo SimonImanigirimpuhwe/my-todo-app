@@ -10,6 +10,7 @@ body{
 form{
   display: flex;
   flex-direction: row;
+  position: relative;
 }
 .select{
   margin-left: 10px;
@@ -21,12 +22,52 @@ form input{
   padding-left: 5px;
   font-size: 16px;
 }
+form button{
+  background-color: black;
+  margin-left: -23px;
+  border: none;
+  color: #f5f5ff;
+}
 select{
   height: 25px;
   width: 150px;
   border: none;
 }
 form input:focus,
+form button:focus,
 select:focus{
   outline: none;
+}
+.todoContainer{
+  margin-top: 20px;
+}
+.todo{
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+}
+.todo li{
+  background-color: #ffffff;
+  padding-right: 10px;
+  padding-left: 5px;
+  width: 250px;
+}
+.check{
+  background-color:#333232 ;
+  color: #ffffff;
+  border: none;
+}
+.trash{
+  background-color: #65d4f9;
+  color: #b72976;
+  border: none;
+}
+.todo button:focus{
+  outline: none;
+}
+.todo button:hover,
+select:hover,
+form button:hover{
+  cursor: pointer;
 }
