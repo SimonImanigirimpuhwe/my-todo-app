@@ -9,10 +9,16 @@ function App() {
   const [todoStatus, setTodoStatus] = useState("all");
   const [filteredTodo, setFilteredTodo] = useState([]);
 
+
+  // hooks only once 
+  useEffect(() => {
+    handleGetTodo()
+  }, [])
+  
   // react hooks with use effect
   useEffect(() => {
     handleFilter()
-
+    handleSave()
     // eslint-disable-next-line  react-hooks/exhaustive-deps
   }, [todoValue, todoStatus])
 
@@ -55,6 +61,21 @@ function App() {
     }; 
   };
 
+  // save to local storage
+  const handleSave = () => {
+      localStorage.setItem('todoList', JSON.stringify(todoValue))
+  };
+
+  // get todo items from local storage
+  const handleGetTodo = () => {
+    if (localStorage.getItem('todoList') === null) {
+      localStorage.setItem('todoList', JSON.stringify([]));
+    } else {
+      const savedTodo = JSON.parse(localStorage.getItem('todoList'))
+      setTodoValue(savedTodo)
+    }
+  };
+
   return (
     <div className="container">
       <h1>My todo's list</h1>
@@ -63,7 +84,6 @@ function App() {
       setInputValue={setInputValue} 
       handleSubmit={handleSubmit} 
       handleText={handleText}
-      // handleFilter={handleFilter}
       setTodoStatus={setTodoStatus}
       />
       <TodoList 
