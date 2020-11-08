@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import './App.css';
 import Form from './components/Form';
 import TodoList from './components/TodoList';
+import db from './config/firebase.config';
 
 function App() {
   const [inputValue, setInputValue] = useState("");
@@ -9,10 +10,16 @@ function App() {
   const [todoStatus, setTodoStatus] = useState("all");
   const [filteredTodo, setFilteredTodo] = useState([]);
 
+
+  // hooks once only when app get renered
+  useEffect(() => {
+    handleFirebaseData()
+  }, []) // similar to componentDidMount
+
   // react hooks with use effect
   useEffect(() => {
     handleFilter()
-
+    
     // eslint-disable-next-line  react-hooks/exhaustive-deps
   }, [todoValue, todoStatus])
 
@@ -30,6 +37,7 @@ function App() {
   // handle input submit
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (inputValue === '') return
     setTodoValue([
       ...todoValue, 
      { 
@@ -38,6 +46,11 @@ function App() {
       id: ID()
     }
     ]);
+    db.firestore().collection('todos').add({
+      liText: inputValue,
+      completed: false,
+      id: ID()
+    })
     setInputValue('')
   }
 
@@ -54,7 +67,13 @@ function App() {
         setFilteredTodo(todoValue);
     }; 
   };
-
+  
+  // get data from firebase
+  const handleFirebaseData = async() => {
+    const savedData = await db.firestore().collection('todos').get();
+    const result = savedData.docs.map((item) => item.data());
+    setTodoValue(result)
+  }
   return (
     <div className="container">
       <h1>My todo's list</h1>
@@ -63,7 +82,6 @@ function App() {
       setInputValue={setInputValue} 
       handleSubmit={handleSubmit} 
       handleText={handleText}
-      // handleFilter={handleFilter}
       setTodoStatus={setTodoStatus}
       />
       <TodoList 
