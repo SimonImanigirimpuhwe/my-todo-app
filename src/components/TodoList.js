@@ -1,7 +1,7 @@
 import React from 'react';
 import Todo from './Todo';
 
-const TodoList = ({todoValue, setTodoValue, filteredTodo}) => {
+const TodoList = ({todoValue, handleDelete, setTodoValue, filteredTodo}) => {
     return ( 
         <div className="todoContainer">
             <ul>
@@ -9,8 +9,9 @@ const TodoList = ({todoValue, setTodoValue, filteredTodo}) => {
             <Todo 
             todo={todo} 
             key={todo.id} 
-            todoValue={todoValue}
+            handleDelete={handleDelete}
             setTodoValue={setTodoValue}
+            todoValue={todoValue}
             />
             ))}
             </ul>        
