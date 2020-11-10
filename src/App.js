@@ -12,8 +12,21 @@ function App() {
   const [todoStatus, setTodoStatus] = useState("all");
   const [filteredTodo, setFilteredTodo] = useState([]);
   const [image, setImage] = useState("");
+  const [name, setName] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [route, setRoute] = useState('signin');
+  const [open, setOpen] = React.useState(false);
+  const [message, setMessage] = useState("");
+  const [errMessage, setErrMessage] = useState("")
+
+  //handle alters
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
 
   // hooks once only when app get renered
@@ -94,7 +107,15 @@ function App() {
 
   return (
     <div>
-      <Navbar image={image} setImage={setImage} isLoggedIn={isLoggedIn} handleRouteChange={handleRouteChange} route={route}/>
+      <Navbar 
+      image={image} 
+      setImage={setImage} 
+      isLoggedIn={isLoggedIn} 
+      handleRouteChange={handleRouteChange} 
+      route={route}
+      name={name}
+      setName={setName}
+      />
       {
         (route === 'home') ?
       (
@@ -111,6 +132,13 @@ function App() {
       todoValue={todoValue} 
       setTodoValue={setTodoValue}
       filteredTodo={filteredTodo}
+      open={open}
+      setOpen={setOpen}
+      handleClose={handleClose}
+      message={message}
+      errMessage={errMessage}
+      setMessage={setMessage}
+      setErrMessage={setErrMessage}
       />
       </div>
       ) : (
@@ -119,6 +147,8 @@ function App() {
               image={image} 
               setImage={setImage} 
               handleRouteChange={handleRouteChange}
+              name={name}
+              setName={setName}
               />
             </div>
           )          

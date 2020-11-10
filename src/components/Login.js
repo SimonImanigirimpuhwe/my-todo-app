@@ -19,7 +19,7 @@ root: {
 },
 }));
 
-const Login = ({image, setImage, handleRouteChange}) => {
+const Login = ({image, setImage, name, setName, handleRouteChange}) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const [message, setMessage] = useState('');
@@ -45,7 +45,9 @@ const Login = ({image, setImage, handleRouteChange}) => {
       'User': user
     })
     setImage(user.photoURL)
+    setName(user.displayName)
     console.log('state changed', image)
+    console.log('displayName', name)
     if (token) {
         setTimeout(() => {
             handleRouteChange('home')  

@@ -1,5 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -41,6 +43,12 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
+  rootAlert: {
+    width: '100%',
+    '& > * + *': {
+    marginTop: theme.spacing(1),
+    },
+},
   menuButton: {
     marginRight: theme.spacing(2),
   },
@@ -51,19 +59,46 @@ const useStyles = makeStyles((theme) => ({
       borderRadius: '100%',
       width: '50px',
       height: '50px',
+  },
+  header: {
+      display: 'flex',
+      flexGrow: 1,
+      justifyContent: 'center',
   }
 }));
 
-export default function ButtonAppBar({props, route, handleRouteChange, image}) {
-  const classes = useStyles();
+// add alerts
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+};
 
+
+export default function ButtonAppBar({props, route, handleRouteChange, image, name}) {
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const [message, setMessage] = useState("");
+  const [errMessage, setErrMessage] = useState("")
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+  
  // handle signout
  const handleSignout = () => {
     firebase.auth().signOut().then(() => {
         setTimeout(() => {
             handleRouteChange('signin')          
         }, 2000);
-    }).catch((err) => console.log(err))
+        setOpen(true)
+        setMessage('logged out successfully')
+    }).catch((err) => {
+        setOpen(true)
+        setErrMessage(err.message)
+    })
  }
   return (
     <div className={classes.root}>
@@ -75,13 +110,38 @@ export default function ButtonAppBar({props, route, handleRouteChange, image}) {
             {(route === 'home') ? <img className={classes.profile} src={image} alt="user profile" /> : ''}
             </>
           </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            Todo App
-          </Typography> 
-          <Button color="inherit" onClick={handleSignout}>{(route === 'home')? 'Sign out' : ''}</Button>
+          <>
+          {(route === 'home') ? 
+          (<Typography variant="h6" className={classes.title}>
+            {name}
+          </Typography>)  : 
+          (<Typography variant="h6" className={classes.header}>
+            Welcome to an amazing Todo Web App
+          </Typography>) 
+          }
+          </> 
+          <>
+          {(route === 'home')? <Button color="inherit" onClick={handleSignout}>Sign out</Button> : ''}
+          </>        
+          
         </Toolbar>
       </AppBar>
       </ElevationScroll>
+      <div className={classes.rootAlert}>
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            {
+            (message) ? (
+            <Alert onClose={handleClose} severity="success">
+                {message}
+            </Alert>
+                ) : (
+            <Alert onClose={handleClose} severity="error">
+                    {errMessage}
+            </Alert> 
+            )
+            }            
+        </Snackbar>
+      </div>
     </div>
   );
 }

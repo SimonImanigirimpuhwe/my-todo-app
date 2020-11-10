@@ -1,7 +1,7 @@
 import React from 'react';
 import db from '../config/firebase.config';
 
-const Todo = ({ todo,todoValue, setTodoValue }) => {
+const Todo = ({ todo,todoValue, setTodoValue, setMessage, setErrMessage, setOpen }) => {
     
     // handle delete
     const handleDelete = async(e) => {
@@ -21,11 +21,20 @@ const Todo = ({ todo,todoValue, setTodoValue }) => {
                 .collection('todos')
                 .doc(item.id)
                 .delete()
-                .then(() => alert('Todo item deleted'))
-                .catch(err => alert('something went wrong!', err.message)) 
+                .then(() => {
+                    setOpen(true)
+                    setMessage('Todo item deleted successfully')
+                })
+                .catch(err => {
+                    setOpen(true)
+                    setErrMessage('something went wrong!', err.message)
+                }) 
             ))
         })
-        .catch((err) => console.log('delete Error', err))
+        .catch((err) => {
+            setOpen(true)
+            setErrMessage('Delete error!', err.message)
+        })
 
         setTodoValue(todoValue.filter((el) => el.id !== todo.id))
     };
@@ -50,11 +59,20 @@ const Todo = ({ todo,todoValue, setTodoValue }) => {
                         .set({
                             completed: !el.completed
                         }, {merge: true})
-                        .then(() => alert('Todo item toggled'))
-                        .catch(err => alert('something went wrong!', err.message)) 
+                        .then(() => {
+                            setOpen(true)
+                            setMessage('Todo item toggled')
+                        })
+                        .catch(err => {
+                            setOpen(true)
+                            setErrMessage('something went wrong!', err.message)
+                        }) 
                     ))
                 })
-                .catch((err) => console.log('delete Error', err))
+                .catch((err) => {
+                    setOpen(true)
+                    setErrMessage('Toggle error!', err.message)
+                })
         
                 return {
                     ...el,
