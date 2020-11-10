@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
 import Form from './components/Form';
+import Login from './components/Login';
+import Navbar from './components/Navbar';
 import TodoList from './components/TodoList';
 import db from './config/firebase.config';
 
@@ -9,6 +11,22 @@ function App() {
   const [todoValue, setTodoValue] = useState([]);
   const [todoStatus, setTodoStatus] = useState("all");
   const [filteredTodo, setFilteredTodo] = useState([]);
+  const [image, setImage] = useState("");
+  const [name, setName] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [route, setRoute] = useState('signin');
+  const [open, setOpen] = React.useState(false);
+  const [message, setMessage] = useState("");
+  const [errMessage, setErrMessage] = useState("")
+
+  //handle alters
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
 
   // hooks once only when app get renered
@@ -73,9 +91,35 @@ function App() {
     const savedData = await db.firestore().collection('todos').get();
     const result = savedData.docs.map((item) => item.data());
     setTodoValue(result)
+  };
+
+  // handle route change
+  const handleRouteChange = (route) => {
+    if (route === 'signin') {
+      setRoute(false);
+      setIsLoggedIn(false)
+    } else if (route === 'home') {
+      setRoute(true);
+      setIsLoggedIn(true);
+    }
+    setRoute(route)
   }
+
   return (
-    <div className="container">
+    <div>
+      <Navbar 
+      image={image} 
+      setImage={setImage} 
+      isLoggedIn={isLoggedIn} 
+      handleRouteChange={handleRouteChange} 
+      route={route}
+      name={name}
+      setName={setName}
+      />
+      {
+        (route === 'home') ?
+      (
+      <div className="container">
       <h1>My todo's list</h1>
       <Form 
       inputValue={inputValue} 
@@ -88,7 +132,27 @@ function App() {
       todoValue={todoValue} 
       setTodoValue={setTodoValue}
       filteredTodo={filteredTodo}
+      open={open}
+      setOpen={setOpen}
+      handleClose={handleClose}
+      message={message}
+      errMessage={errMessage}
+      setMessage={setMessage}
+      setErrMessage={setErrMessage}
       />
+      </div>
+      ) : (
+            <div className="login-btn">
+              <Login 
+              image={image} 
+              setImage={setImage} 
+              handleRouteChange={handleRouteChange}
+              name={name}
+              setName={setName}
+              />
+            </div>
+          )          
+      }
     </div>
   );
 }
