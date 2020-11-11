@@ -1,15 +1,17 @@
 import React from 'react';
 import db from '../config/firebase.config';
 
-const Todo = ({ todo,todoValue, setTodoValue, setMessage, setErrMessage, setOpen }) => {
+const Todo = ({ todo,todoValue, setTodoValue, setMessage, setErrMessage, setOpen, userUid }) => {
     
     // handle delete
     const handleDelete = async(e) => {
         e.preventDefault();
         e.stopPropagation()
+
         const docRef =db
         .firestore()
-        .collection('todos');
+        .collection('todos')
+        .where('authorId', '==', `${userUid}`);
 
       await docRef
         .where('id', '==', `${todo.id}`)
@@ -37,7 +39,7 @@ const Todo = ({ todo,todoValue, setTodoValue, setMessage, setErrMessage, setOpen
         })
 
         setTodoValue(todoValue.filter((el) => el.id !== todo.id))
-    };
+};
 
     // handle completed todo
     const handleCompleted = async() => {
@@ -45,13 +47,15 @@ const Todo = ({ todo,todoValue, setTodoValue, setMessage, setErrMessage, setOpen
             if (el.id === todo.id) {
                 const docRef =db
                 .firestore()
-                .collection('todos');
+                .collection('todos')
+                .where('authorId', '==', `${userUid}`);
         
               docRef
                 .where('id', '==', `${todo.id}`)
                 .get()
                 .then((result) => {
                     result.docs.map(item => (
+                        
                         db
                         .firestore()
                         .collection('todos')
@@ -71,7 +75,7 @@ const Todo = ({ todo,todoValue, setTodoValue, setMessage, setErrMessage, setOpen
                 })
                 .catch((err) => {
                     setOpen(true)
-                    setErrMessage('Toggle error!', err.message)
+                    setErrMessage('Toggle error', err.message)
                 })
         
                 return {

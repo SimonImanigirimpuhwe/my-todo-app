@@ -18,11 +18,13 @@ const useStyles = makeStyles((theme) => ({
       '& > * + *': {
       marginTop: theme.spacing(2)
       },
-  },
+    },
+    pos:{
 
+    }
   }));
 
-const TodoList = ({todoValue, handleDelete, setTodoValue, filteredTodo, message, errMessage, handleClose, open, setOpen, setMessage, setErrMessage}) => {
+const TodoList = ({todoValue, handleDelete, setTodoValue, filteredTodo, message, errMessage, handleClose, open, setOpen, setMessage, setErrMessage, userUid}) => {
     const classes = useStyles()
 
     return ( 
@@ -53,6 +55,7 @@ const TodoList = ({todoValue, handleDelete, setTodoValue, filteredTodo, message,
             setOpen={setOpen}
             setErrMessage={setErrMessage}
             setMessage={setMessage}
+            userUid={userUid}
             />
             ))}
             </ul>        
