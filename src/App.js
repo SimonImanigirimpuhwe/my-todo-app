@@ -17,7 +17,8 @@ function App() {
   const [route, setRoute] = useState('signin');
   const [open, setOpen] = React.useState(false);
   const [message, setMessage] = useState("");
-  const [errMessage, setErrMessage] = useState("")
+  const [errMessage, setErrMessage] = useState("");
+  const [userUid, setUserUid] = useState("");
 
   //handle alters
   const handleClose = (event, reason) => {
@@ -32,12 +33,12 @@ function App() {
   // hooks once only when app get renered
   useEffect(() => {
     handleFirebaseData()
-  }, []) // similar to componentDidMount
+    // eslint-disable-next-line  react-hooks/exhaustive-deps
+  }, [userUid]) // similar to componentDidMount
 
   // react hooks with use effect
   useEffect(() => {
     handleFilter()
-    
     // eslint-disable-next-line  react-hooks/exhaustive-deps
   }, [todoValue, todoStatus])
 
@@ -56,19 +57,25 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (inputValue === '') return
-    setTodoValue([
+   
+    db.firestore().collection('todos').add({
+      liText: inputValue,
+      completed: false,
+      id: ID(),
+      authorId: userUid
+    })
+    .then(() => {
+       setTodoValue([
       ...todoValue, 
      { 
       liText: inputValue,
       completed: false,
-      id: ID()
+      id: ID(),
+      authorId: userUid
     }
     ]);
-    db.firestore().collection('todos').add({
-      liText: inputValue,
-      completed: false,
-      id: ID()
     })
+    .catch((err) => console.log(err))
     setInputValue('')
   }
 
@@ -88,7 +95,7 @@ function App() {
   
   // get data from firebase
   const handleFirebaseData = async() => {
-    const savedData = await db.firestore().collection('todos').get();
+    const savedData = await db.firestore().collection('todos').where('authorId', '==', `${userUid}`).get();
     const result = savedData.docs.map((item) => item.data());
     setTodoValue(result)
   };
@@ -139,19 +146,22 @@ function App() {
       errMessage={errMessage}
       setMessage={setMessage}
       setErrMessage={setErrMessage}
+      userUid={userUid}
       />
       </div>
       ) : (
-            <div className="login-btn">
-              <Login 
-              image={image} 
-              setImage={setImage} 
-              handleRouteChange={handleRouteChange}
-              name={name}
-              setName={setName}
-              />
-            </div>
-          )          
+      <div className="login-btn">
+        <Login 
+        image={image} 
+        setImage={setImage} 
+        handleRouteChange={handleRouteChange}
+        name={name}
+        setName={setName}
+        userUid={userUid}
+        setUserUid={setUserUid}
+        />
+      </div>
+      )          
       }
     </div>
   );

@@ -122,8 +122,7 @@ export default function ButtonAppBar({props, route, handleRouteChange, image, na
           </> 
           <>
           {(route === 'home')? <Button color="inherit" onClick={handleSignout}>Sign out</Button> : ''}
-          </>        
-          
+          </>                
         </Toolbar>
       </AppBar>
       </ElevationScroll>

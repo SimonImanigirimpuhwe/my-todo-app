@@ -19,7 +19,7 @@ root: {
 },
 }));
 
-const Login = ({image, setImage, name, setName, handleRouteChange}) => {
+const Login = ({image, setImage, name, setName, handleRouteChange, setUserUid, userUid}) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const [message, setMessage] = useState('');
@@ -39,15 +39,11 @@ const Login = ({image, setImage, name, setName, handleRouteChange}) => {
   firebase.auth().signInWithPopup(provider).then((result) => {
     const token = result.credential.accessToken;
     const user = result.user;
-    
-    console.log({
-      'Token': token,
-      'User': user
-    })
+
     setImage(user.photoURL)
     setName(user.displayName)
-    console.log('state changed', image)
-    console.log('displayName', name)
+    setUserUid(user.uid)
+    
     if (token) {
         setTimeout(() => {
             handleRouteChange('home')  
@@ -56,19 +52,7 @@ const Login = ({image, setImage, name, setName, handleRouteChange}) => {
         setMessage('logged successfully')
     }
   }).catch((error) => {
-    // Handle Errors here.
-    const errorCode = error.code;
     const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.email;
-    // The firebase.auth.AuthCredential type that was used.
-    const credential = error.credential;
-    console.log({
-      'Error code ': errorCode,
-      'Error Message': errorMessage,
-      'Error email': email,
-      'Error credential': credential
-    })
     setOpen(true)
     setErrMessage(errorMessage)
   });
