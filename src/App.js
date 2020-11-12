@@ -3,6 +3,7 @@ import './App.css';
 import Form from './components/Form';
 import Login from './components/Login';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import TodoList from './components/TodoList';
 import db from './config/firebase.config';
 
@@ -163,6 +164,7 @@ function App() {
       </div>
       )          
       }
+      <Footer />
     </div>
   );
 }
