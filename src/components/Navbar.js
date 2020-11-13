@@ -64,6 +64,9 @@ const useStyles = makeStyles((theme) => ({
       display: 'flex',
       flexGrow: 1,
       justifyContent: 'center',
+  },
+  pos: {
+    marginTop: '-170vh'
   }
 }));
 
@@ -92,7 +95,7 @@ export default function ButtonAppBar({props, route, handleRouteChange, image, na
     firebase.auth().signOut().then(() => {
         setTimeout(() => {
             handleRouteChange('signin')          
-        }, 2000);
+        }, 4000);
         setOpen(true)
         setMessage('logged out successfully')
     }).catch((err) => {
@@ -127,14 +130,14 @@ export default function ButtonAppBar({props, route, handleRouteChange, image, na
       </AppBar>
       </ElevationScroll>
       <div className={classes.rootAlert}>
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
             {
             (message) ? (
-            <Alert onClose={handleClose} severity="success">
+            <Alert onClose={handleClose} severity="success" className={classes.pos}>
                 {message}
             </Alert>
                 ) : (
-            <Alert onClose={handleClose} severity="error">
+            <Alert onClose={handleClose} severity="error" className={classes.pos}>
                     {errMessage}
             </Alert> 
             )

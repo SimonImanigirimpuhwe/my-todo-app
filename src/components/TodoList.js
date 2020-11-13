@@ -19,9 +19,9 @@ const useStyles = makeStyles((theme) => ({
       marginTop: theme.spacing(2)
       },
     },
-    pos:{
-
-    }
+    pos: {
+        marginTop: '-170vh',
+      }
   }));
 
 const TodoList = ({todoValue, handleDelete, setTodoValue, filteredTodo, message, errMessage, handleClose, open, setOpen, setMessage, setErrMessage, userUid}) => {
@@ -33,12 +33,12 @@ const TodoList = ({todoValue, handleDelete, setTodoValue, filteredTodo, message,
                 <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
                     {
                     (message) ? (
-                    <Alert onClose={handleClose} severity="success">
+                    <Alert onClose={handleClose} severity="success" className={classes.pos}>
                         {message}
                     </Alert>
                         ) : (
-                    <Alert onClose={handleClose} severity="error">
-                            {errMessage}
+                    <Alert onClose={handleClose} severity="error" className={classes.pos}>
+                        {errMessage}
                     </Alert> 
                     )
                     }            
