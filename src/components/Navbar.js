@@ -76,11 +76,15 @@ function Alert(props) {
 };
 
 
-export default function ButtonAppBar({props, route, handleRouteChange, image, name}) {
+export default function ButtonAppBar({props}) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [message, setMessage] = useState("");
   const [errMessage, setErrMessage] = useState("")
+  
+  const userUid = localStorage.getItem('userUid');
+  const name = localStorage.getItem('name');
+  const image =localStorage.getItem('ImageUrl');
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -94,7 +98,10 @@ export default function ButtonAppBar({props, route, handleRouteChange, image, na
  const handleSignout = () => {
     firebase.auth().signOut().then(() => {
         setTimeout(() => {
-            handleRouteChange('signin')          
+          window.location='/';
+          localStorage.removeItem('userUid');
+          localStorage.removeItem('name');
+          localStorage.removeItem('ImageUrl');    
         }, 4000);
         setOpen(true)
         setMessage('logged out successfully')
@@ -110,11 +117,11 @@ export default function ButtonAppBar({props, route, handleRouteChange, image, na
         <Toolbar>
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
             <>
-            {(route === 'home') ? <img className={classes.profile} src={image} alt="user profile" /> : ''}
+            {(userUid) ? <img className={classes.profile} src={image} alt="user profile" /> : ''}
             </>
           </IconButton>
           <>
-          {(route === 'home') ? 
+          {(userUid) ? 
           (<Typography variant="h6" className={classes.title}>
             {name}
           </Typography>)  : 
@@ -124,7 +131,7 @@ export default function ButtonAppBar({props, route, handleRouteChange, image, na
           }
           </> 
           <>
-          {(route === 'home')? <Button color="inherit" onClick={handleSignout}>Sign out</Button> : ''}
+          {(userUid)? <Button color="inherit" onClick={handleSignout}>Sign out</Button> : ''}
           </>                
         </Toolbar>
       </AppBar>

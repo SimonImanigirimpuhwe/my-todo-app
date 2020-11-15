@@ -52,19 +52,21 @@ btn: {
 }
 }));
 
-const Login = ({image, setImage, name, setName, handleRouteChange, setUserUid, userUid}) => {
-    const classes = useStyles();
-    const [open, setOpen] = React.useState(false);
-    const [message, setMessage] = useState('');
-    const [errMessage, setErrMessage] = useState('')
+const Login = () => {
+  const classes = useStyles();
 
-    const handleClose = (event, reason) => {
-      if (reason === 'clickaway') {
-        return;
-      }
-  
-      setOpen(false);
-    };
+  //states
+  const [open, setOpen] = React.useState(false);
+  const [message, setMessage] = useState('');
+  const [errMessage, setErrMessage] = useState('')
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
     const googleProvider = new firebase.auth.GoogleAuthProvider();
     const twitterProvider =  new firebase.auth.TwitterAuthProvider();
@@ -90,13 +92,13 @@ const Login = ({image, setImage, name, setName, handleRouteChange, setUserUid, u
     const token = result.credential.accessToken;
     const user = result.user;
 
-    setImage(user.photoURL)
-    setName(user.displayName)
-    setUserUid(user.uid)
-    
+
+    localStorage.setItem('ImageUrl', user.photoURL)
+    localStorage.setItem('name', user.displayName)
+    localStorage.setItem('userUid', user.uid)
     if (token) {
         setTimeout(() => {
-            handleRouteChange('home')  
+          window.location='/dashboard';
         }, 3000);
         setOpen(true);
         setMessage('logged successfully')
@@ -108,6 +110,7 @@ const Login = ({image, setImage, name, setName, handleRouteChange, setUserUid, u
   });
 }  
     return ( 
+      <div className="login-btn">
         <div>
             <div className={classes.root}>
                 <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} >
@@ -137,7 +140,7 @@ const Login = ({image, setImage, name, setName, handleRouteChange, setUserUid, u
                 }
             </Card>
         </div>
-        
+       </div> 
      );
 }
  
