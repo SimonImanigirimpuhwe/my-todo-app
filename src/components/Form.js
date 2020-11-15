@@ -1,12 +1,21 @@
 import React from 'react';
 
-const Form = ({handleText, handleSubmit, inputValue, setTodoStatus}) => {
 
+const Form = ({inputValue, setTodoStatus, handleSubmit, setInputValue}) => {
+
+     // handle text on input event change
+    const handleText = (e) => {
+        e.preventDefault();
+        setInputValue(e.target.value)
+    };
+    
     // handle status change
     const handleStatus = (e) => {
         setTodoStatus(e.target.value)
     }
+
     return ( 
+        <div className="container">
         <form>
             <input 
             value={inputValue} 
@@ -23,6 +32,7 @@ const Form = ({handleText, handleSubmit, inputValue, setTodoStatus}) => {
                 </select>
             </div>
         </form>
+        </div>
      );
 }
  

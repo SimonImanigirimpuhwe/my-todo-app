@@ -2,7 +2,7 @@ import React from 'react';
 import db from '../config/firebase.config';
 
 const Todo = ({ todo,todoValue, setTodoValue, setMessage, setErrMessage, setOpen, userUid }) => {
-    
+
     // handle delete
     const handleDelete = async(e) => {
         e.preventDefault();
