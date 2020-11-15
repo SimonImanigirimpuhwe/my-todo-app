@@ -25,15 +25,26 @@ cardRoot: {
   minWidth: 400,
   minHeight: 300,
   display: 'flex',
-  flexDirection:'row',
+  flexDirection:'column',
   justifyContent: 'center',
   backgroundColor: 'whitesmoke',
   boxShadow: '7px 5px 2px #3f51b5',
   borderRadius: '15px'
 },
-logo: {
+provider: {
+  display: 'flex',
+  flexDirection:'row',
+  justifyContent: 'center',
+  marginTop: 30
+},
+glogo: {
   width: 100,
   height: 50,
+  alignSelf: 'center',
+},
+tlogo: {
+  width: 100,
+  height: 70,
   alignSelf: 'center',
 },
 btn: {
@@ -55,9 +66,26 @@ const Login = ({image, setImage, name, setName, handleRouteChange, setUserUid, u
       setOpen(false);
     };
 
-    const provider = new firebase.auth.GoogleAuthProvider();
+    const googleProvider = new firebase.auth.GoogleAuthProvider();
+    const twitterProvider =  new firebase.auth.TwitterAuthProvider();
 
-    const googleSigninFunc = () => {
+    const authentications = [
+      {
+        img : "https://blog.hubspot.com/hubfs/image8-2.jpg",
+        btn: "login with Google",
+        alt:'google logo',
+        provider: googleProvider
+      },
+      {
+        img : "https://icons-for-free.com/iconfiles/png/512/logo+twitter+twitter+logo+icon-1320190502069263658.png",
+        btn: "login with Twitter",
+        alt: "twitter logo",
+        provider: twitterProvider
+      }
+    ]
+
+    const googleSigninFunc = (provider) => {
+      console.log(provider)
     firebase.auth().signInWithPopup(provider).then((result) => {
     const token = result.credential.accessToken;
     const user = result.user;
@@ -96,11 +124,17 @@ const Login = ({image, setImage, name, setName, handleRouteChange, setUserUid, u
                     }            
                 </Snackbar>
             </div>
-            <Card className={classes.cardRoot}>
-            <img src="https://blog.hubspot.com/hubfs/image8-2.jpg" alt="google logo" className={classes.logo}/>
-            <Button  onClick={googleSigninFunc} variant="contained" color="primary" className={classes.btn}>
-                Login with Google
-            </Button>
+            <Card className={classes.cardRoot} >
+                {
+                  authentications.map((authpr) => (
+                    <div className={classes.provider}>
+                      <img src={authpr.img} alt={authpr.alt} className={(authpr.alt === 'google logo') ? classes.glogo : classes.tlogo}/>
+                        <Button  onClick={() => googleSigninFunc(authpr.provider)} variant="contained" color="primary" className={classes.btn}>
+                            {authpr.btn}
+                      </Button>
+                    </div>
+                  ))
+                }
             </Card>
         </div>
         
