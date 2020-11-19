@@ -1,10 +1,12 @@
-import React, {useState } from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import Card from '@material-ui/core/Card';
 import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 import firebase from '../config/firebase.config';
+import { useHistory } from 'react-router-dom';
+import NavBar from './Navbar';
 
 
 function Alert(props) {
@@ -52,9 +54,9 @@ btn: {
 }
 }));
 
-const Login = () => {
+const Login = ({isLoggedIn}) => {
   const classes = useStyles();
-
+  const history = useHistory();
   //states
   const [open, setOpen] = React.useState(false);
   const [message, setMessage] = useState('');
@@ -87,21 +89,21 @@ const Login = () => {
     ]
 
     const googleSigninFunc = (provider) => {
-      console.log(provider)
     firebase.auth().signInWithPopup(provider).then((result) => {
     const token = result.credential.accessToken;
     const user = result.user;
 
 
-    localStorage.setItem('ImageUrl', user.photoURL)
-    localStorage.setItem('name', user.displayName)
-    localStorage.setItem('userUid', user.uid)
     if (token) {
-        setTimeout(() => {
-          window.location='/dashboard';
-        }, 3000);
+      setTimeout(() => {
+        history.push('/dashboard');
+        localStorage.setItem('ImageUrl', user.photoURL)
+        localStorage.setItem('name', user.displayName)
+        localStorage.setItem('userUid', user.uid)
+      }, 3000);
         setOpen(true);
         setMessage('logged successfully')
+        
     }
   }).catch((error) => {
     const errorMessage = error.message;
@@ -110,6 +112,8 @@ const Login = () => {
   });
 }  
     return ( 
+      <>
+      <NavBar isLoggedIn={false} />
       <div className="login-btn">
         <div>
             <div className={classes.root}>
@@ -130,7 +134,7 @@ const Login = () => {
             <Card className={classes.cardRoot} >
                 {
                   authentications.map((authpr) => (
-                    <div className={classes.provider}>
+                    <div className={classes.provider} key={authpr.alt}>
                       <img src={authpr.img} alt={authpr.alt} className={(authpr.alt === 'google logo') ? classes.glogo : classes.tlogo}/>
                         <Button  onClick={() => googleSigninFunc(authpr.provider)} variant="contained" color="primary" className={classes.btn}>
                             {authpr.btn}
@@ -141,6 +145,7 @@ const Login = () => {
             </Card>
         </div>
        </div> 
+       </>
      );
 }
  

@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -76,15 +77,18 @@ function Alert(props) {
 };
 
 
-export default function ButtonAppBar({props}) {
+export default function ButtonAppBar({props, isLoggedIn}) {
   const classes = useStyles();
+  const history = useHistory();
+
   const [open, setOpen] = React.useState(false);
   const [message, setMessage] = useState("");
-  const [errMessage, setErrMessage] = useState("")
+  const [errMessage, setErrMessage] = useState("");
+
   
-  const userUid = localStorage.getItem('userUid');
   const name = localStorage.getItem('name');
   const image =localStorage.getItem('ImageUrl');
+
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -94,14 +98,15 @@ export default function ButtonAppBar({props}) {
     setOpen(false);
   };
   
+  
  // handle signout
  const handleSignout = () => {
-    firebase.auth().signOut().then(() => {
-        setTimeout(() => {
-          window.location='/';
-          localStorage.removeItem('userUid');
-          localStorage.removeItem('name');
-          localStorage.removeItem('ImageUrl');    
+    firebase.auth().signOut().then((res) => {
+      setTimeout(() => {
+        history.goBack()
+        localStorage.removeItem('userUid');
+        localStorage.removeItem('name');
+        localStorage.removeItem('ImageUrl');    
         }, 4000);
         setOpen(true)
         setMessage('logged out successfully')
@@ -117,11 +122,11 @@ export default function ButtonAppBar({props}) {
         <Toolbar>
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
             <>
-            {(userUid) ? <img className={classes.profile} src={image} alt="user profile" /> : ''}
+            {(isLoggedIn) ? <img className={classes.profile} src={image} alt="user profile" /> : ''}
             </>
           </IconButton>
           <>
-          {(userUid) ? 
+          {(isLoggedIn) ? 
           (<Typography variant="h6" className={classes.title}>
             {name}
           </Typography>)  : 
@@ -131,7 +136,7 @@ export default function ButtonAppBar({props}) {
           }
           </> 
           <>
-          {(userUid)? <Button color="inherit" onClick={handleSignout}>Sign out</Button> : ''}
+          {(isLoggedIn)? <Button color="inherit" onClick={handleSignout}>Sign out</Button> : ''}
           </>                
         </Toolbar>
       </AppBar>
