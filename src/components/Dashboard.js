@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import Form from './Form';
 import TodoList from './TodoList';
+import NavBar from './Navbar';
+
 import db from '../config/firebase.config';
 
 const User = () => {
@@ -12,15 +14,14 @@ const User = () => {
     const [message, setMessage] = useState("");
     const [errMessage, setErrMessage] = useState("");
 
+    
+     const userUid = localStorage.getItem('userUid');
 
-
-    const userUid = localStorage.getItem('userUid')
     //handle alters
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
         return;
         }
-
         setOpen(false);
     };
 
@@ -28,6 +29,7 @@ const User = () => {
     // hooks once only when app get renered
     useEffect(() => {
         handleFirebaseData()
+        // setIsLoggedIn(true)
         // eslint-disable-next-line  react-hooks/exhaustive-deps
     }, [userUid]) // similar to componentDidMount
 
@@ -95,30 +97,33 @@ const User = () => {
         setTodoValue(result)
     };
 
-    return (  
-        <div className="container">
-          <h1>My todo's list</h1>
-          <Form 
-          inputValue={inputValue} 
-          setInputValue={setInputValue} 
-          handleSubmit={handleSubmit} 
-          handleText={handleText}
-          setTodoStatus={setTodoStatus}
-          />
-          <TodoList 
-          todoValue={todoValue} 
-          setTodoValue={setTodoValue}
-          filteredTodo={filteredTodo}
-          open={open}
-          setOpen={setOpen}
-          handleClose={handleClose}
-          message={message}
-          errMessage={errMessage}
-          setMessage={setMessage}
-          setErrMessage={setErrMessage}
-          userUid={userUid}
-          />
-          </div>
+    return ( 
+        <> 
+            <NavBar isLoggedIn={true} />
+            <div className="container">
+            <h1>My todo's list</h1>
+            <Form 
+            inputValue={inputValue} 
+            setInputValue={setInputValue} 
+            handleSubmit={handleSubmit} 
+            handleText={handleText}
+            setTodoStatus={setTodoStatus}
+            />
+            <TodoList 
+            todoValue={todoValue} 
+            setTodoValue={setTodoValue}
+            filteredTodo={filteredTodo}
+            open={open}
+            setOpen={setOpen}
+            handleClose={handleClose}
+            message={message}
+            errMessage={errMessage}
+            setMessage={setMessage}
+            setErrMessage={setErrMessage}
+            userUid={userUid}
+            />
+            </div>
+        </>
     );
 }
  
